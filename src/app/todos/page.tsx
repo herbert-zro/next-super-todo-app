@@ -1,26 +1,14 @@
-"use client";
-
-import { useState } from "react";
-import { Todo } from "@/features/todos/domain/entities/Todo";
+import { GetTodos } from "@/features/todos/application/use-cases/GetTodos";
+import { TodoPrismaRepository } from "@/features/todos/infrastructure/repositories/TodoPrismaRepository";
+import {
+  addTodoAction,
+  toggleTodoAction,
+} from "@/features/todos/actions/todos.actions";
 import TodoInput from "@/features/todos/components/TodoInput";
 import TodoItem from "@/features/todos/components/TodoItem";
 
-const TodosPage = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-
-  const handleAdd = (title: string) => {
-    setTodos((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), title, completed: false },
-    ]);
-  };
-
-  const handleToggle = (id: string) => {
-    setTodos((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
-  };
-
+const TodosPage = async () => {
+  const todos = await new GetTodos(TodoPrismaRepository).execute();
   const remaining = todos.filter((t) => !t.completed).length;
 
   return (
@@ -36,7 +24,7 @@ const TodosPage = () => {
         </header>
 
         <div className="mb-6">
-          <TodoInput onAdd={handleAdd} />
+          <TodoInput onAdd={addTodoAction} />
         </div>
 
         <ul className="divide-y divide-border rounded-lg border bg-card text-card-foreground shadow-sm">
@@ -47,7 +35,7 @@ const TodosPage = () => {
           ) : (
             todos.map((todo) => (
               <li key={todo.id}>
-                <TodoItem todo={todo} onToggle={handleToggle} />
+                <TodoItem todo={todo} onToggle={toggleTodoAction} />
               </li>
             ))
           )}

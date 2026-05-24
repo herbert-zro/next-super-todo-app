@@ -1,38 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { Textarea } from "@/shared/components/ui/textarea";
 
 type Props = {
-  onAdd: (title: string) => void;
+  onAdd: (title: string, description: string) => Promise<void>;
 };
 
 const TodoInput: React.FC<Props> = ({ onAdd }) => {
-  const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const trimmed = value.trim();
-    if (!trimmed) return;
-    onAdd(trimmed);
-    setValue("");
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) return;
+    startTransition(async () => {
+      await onAdd(trimmedTitle, description.trim());
+      setTitle("");
+      setDescription("");
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full items-center gap-2">
+    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3">
       <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Add a new task..."
-        aria-label="New task title"
-        className="flex-1"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Task title..."
+        aria-label="Task title"
+        disabled={isPending}
       />
-      <Button type="submit" disabled={!value.trim()}>
-        <Plus className="size-4" />
-        Add
-      </Button>
+      <Textarea
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description (optional)"
+        aria-label="Task description"
+        rows={3}
+        disabled={isPending}
+      />
+      <div className="flex justify-end">
+        <Button type="submit" disabled={!title.trim() || isPending}>
+          <Plus className="size-4" />
+          Add
+        </Button>
+      </div>
     </form>
   );
 };
