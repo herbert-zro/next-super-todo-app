@@ -1,5 +1,6 @@
-import { Todo, createTodo } from "../../domain/entities/Todo";
+import { Todo } from "../../domain/entities/Todo";
 import { TodoRepository } from "../../domain/repositories/TodoRepository";
+import { createTodo } from "../validation/createTodo";
 
 type UpdateTodoInput = Pick<Todo, "id" | "title" | "description">;
 
