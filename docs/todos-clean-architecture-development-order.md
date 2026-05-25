@@ -35,11 +35,13 @@ El feature `todos` permite a un usuario **gestionar tareas** (Todo). Cada tarea 
 - **Fechas** de creación y modificación (ISO strings).
 
 Operaciones disponibles desde la UI:
+
 - Listar todas las tareas.
 - Agregar una nueva tarea.
 - Marcar una tarea como completada o pendiente.
 
 Operaciones disponibles en código (no expuestas todavía en la UI):
+
 - Buscar por id.
 - Actualizar título/descripción.
 - Eliminar una tarea.
@@ -48,6 +50,7 @@ Operaciones disponibles en código (no expuestas todavía en la UI):
 Tiene las cinco capas clásicas de Clean Architecture/Hexagonal en muy pocos archivos: dominio, aplicación, infraestructura, composition root (acciones de servidor + ruta API) y presentación (componentes + página). Si entiendes este feature, puedes replicar el patrón en cualquier otro.
 
 **Stack involucrado:**
+
 - Next.js 16 (App Router) + React 19
 - TypeScript con `paths` `@/*` → `./src/*`
 - Prisma 7 + PostgreSQL (vía `@prisma/adapter-pg`)
@@ -95,25 +98,25 @@ DOMAIN  │   domain/entities/Todo.ts                             │  ← Núcl
 
 ### Tabla de archivos por capa
 
-| # | Archivo | Capa | Existe |
-|---|---------|------|--------|
-| 1 | [src/features/todos/domain/entities/Todo.ts](../src/features/todos/domain/entities/Todo.ts) | Dominio (Entidad) | ✅ |
-| 2 | [src/features/todos/domain/repositories/TodoRepository.ts](../src/features/todos/domain/repositories/TodoRepository.ts) | Dominio (Puerto) | ✅ |
-| 3 | [src/features/todos/application/use-cases/GetTodos.ts](../src/features/todos/application/use-cases/GetTodos.ts) | Aplicación | ✅ |
-| 4 | [src/features/todos/application/use-cases/FindById.ts](../src/features/todos/application/use-cases/FindById.ts) | Aplicación | ✅ |
-| 5 | [src/features/todos/application/use-cases/AddTodo.ts](../src/features/todos/application/use-cases/AddTodo.ts) | Aplicación | ✅ |
-| 6 | [src/features/todos/application/use-cases/UpdateTodo.ts](../src/features/todos/application/use-cases/UpdateTodo.ts) | Aplicación | ✅ |
-| 7 | [src/features/todos/application/use-cases/DeleteTodo.ts](../src/features/todos/application/use-cases/DeleteTodo.ts) | Aplicación | ✅ |
-| 8 | [src/features/todos/application/use-cases/ToggleTodoCompletion.ts](../src/features/todos/application/use-cases/ToggleTodoCompletion.ts) | Aplicación | ✅ |
-| 9 | [prisma/schema.prisma](../prisma/schema.prisma) | Infraestructura (esquema DB) | ✅ |
-| 10 | [src/shared/infrastructure/database/prisma/prisma.client.ts](../src/shared/infrastructure/database/prisma/prisma.client.ts) | Infraestructura (cliente DB compartido) | ✅ |
-| 11 | [src/features/todos/infrastructure/repositories/TodoPrismaRepository.ts](../src/features/todos/infrastructure/repositories/TodoPrismaRepository.ts) | Infraestructura (Adapter) | ✅ |
-| 12 | [src/app/api/todos/route.ts](../src/app/api/todos/route.ts) | Composition Root (Route Handler) | ✅ |
-| 13 | [src/features/todos/actions/todos.actions.ts](../src/features/todos/actions/todos.actions.ts) | Composition Root (Server Action) | ✅ |
-| 14 | [src/features/todos/components/TodoInput.tsx](../src/features/todos/components/TodoInput.tsx) | Presentación (Client) | ✅ |
-| 15 | [src/features/todos/components/TodoItem.tsx](../src/features/todos/components/TodoItem.tsx) | Presentación (Client) | ✅ |
-| 16 | [src/features/todos/components/TodoActions.tsx](../src/features/todos/components/TodoActions.tsx) | Presentación (Client) | ⚠️ vacío |
-| 17 | [src/app/todos/page.tsx](../src/app/todos/page.tsx) | Presentación (Server) + Composition Root | ✅ |
+| #   | Archivo                                                                                                                                             | Capa                                     | Existe   |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | -------- |
+| 1   | [src/features/todos/domain/entities/Todo.ts](../src/features/todos/domain/entities/Todo.ts)                                                         | Dominio (Entidad)                        | ✅       |
+| 2   | [src/features/todos/domain/repositories/TodoRepository.ts](../src/features/todos/domain/repositories/TodoRepository.ts)                             | Dominio (Puerto)                         | ✅       |
+| 3   | [src/features/todos/application/use-cases/GetTodos.ts](../src/features/todos/application/use-cases/GetTodos.ts)                                     | Aplicación                               | ✅       |
+| 4   | [src/features/todos/application/use-cases/FindById.ts](../src/features/todos/application/use-cases/FindById.ts)                                     | Aplicación                               | ✅       |
+| 5   | [src/features/todos/application/use-cases/AddTodo.ts](../src/features/todos/application/use-cases/AddTodo.ts)                                       | Aplicación                               | ✅       |
+| 6   | [src/features/todos/application/use-cases/UpdateTodo.ts](../src/features/todos/application/use-cases/UpdateTodo.ts)                                 | Aplicación                               | ✅       |
+| 7   | [src/features/todos/application/use-cases/DeleteTodo.ts](../src/features/todos/application/use-cases/DeleteTodo.ts)                                 | Aplicación                               | ✅       |
+| 8   | [src/features/todos/application/use-cases/ToggleTodoCompletion.ts](../src/features/todos/application/use-cases/ToggleTodoCompletion.ts)             | Aplicación                               | ✅       |
+| 9   | [prisma/schema.prisma](../prisma/schema.prisma)                                                                                                     | Infraestructura (esquema DB)             | ✅       |
+| 10  | [src/shared/infrastructure/database/prisma/prisma.client.ts](../src/shared/infrastructure/database/prisma/prisma.client.ts)                         | Infraestructura (cliente DB compartido)  | ✅       |
+| 11  | [src/features/todos/infrastructure/repositories/TodoPrismaRepository.ts](../src/features/todos/infrastructure/repositories/TodoPrismaRepository.ts) | Infraestructura (Adapter)                | ✅       |
+| 12  | [src/app/api/todos/route.ts](../src/app/api/todos/route.ts)                                                                                         | Composition Root (Route Handler)         | ✅       |
+| 13  | [src/features/todos/actions/todos.actions.ts](../src/features/todos/actions/todos.actions.ts)                                                       | Composition Root (Server Action)         | ✅       |
+| 14  | [src/features/todos/components/TodoInput.tsx](../src/features/todos/components/TodoInput.tsx)                                                       | Presentación (Client)                    | ✅       |
+| 15  | [src/features/todos/components/TodoItem.tsx](../src/features/todos/components/TodoItem.tsx)                                                         | Presentación (Client)                    | ✅       |
+| 16  | [src/features/todos/components/TodoActions.tsx](../src/features/todos/components/TodoActions.tsx)                                                   | Presentación (Client)                    | ⚠️ vacío |
+| 17  | [src/app/todos/page.tsx](../src/app/todos/page.tsx)                                                                                                 | Presentación (Server) + Composition Root | ✅       |
 
 ---
 
@@ -128,9 +131,10 @@ Antes de tocar un archivo, internaliza esto. Si dudas en el diseño, vuelve a es
    No conoce React, Next, Prisma, HTTP, fetch, ni el reloj del sistema. Si tu entidad necesita un `id` o `createdAt`, esos valores deben ser **inyectados** por capas exteriores.
 
 3. **La aplicación no conoce Prisma.**
-   Solo conoce la *interfaz* `TodoRepository`. Esto se llama **Dependency Inversion** y es la clave que te permite testear casos de uso sin base de datos.
+   Solo conoce la _interfaz_ `TodoRepository`. Esto se llama **Dependency Inversion** y es la clave que te permite testear casos de uso sin base de datos.
 
 > **SOLID en una mirada**
+>
 > - **S**ingle Responsibility: cada archivo tiene una sola razón para cambiar.
 > - **O**pen/Closed: agregamos funcionalidad con archivos nuevos, no modificando existentes.
 > - **L**iskov: cualquier implementación de `TodoRepository` (Prisma, in-memory, mock) es intercambiable.
@@ -154,6 +158,7 @@ Aquí construyes el corazón del feature: la entidad y su contrato de persistenc
 **Capa hexagonal:** Entidad de Dominio (las "Enterprise Business Rules" de Uncle Bob).
 
 **Reglas SOLID aplicadas:**
+
 - **SRP:** solo modela "qué es un Todo" y "qué hace que un Todo sea válido".
 - **OCP:** si mañana quieres validar el largo máximo, agregas la regla dentro de `createTodo` sin tocar a sus consumidores.
 
@@ -190,11 +195,13 @@ export function createTodo(input: Todo): Todo {
 ```
 
 **Detalles clave que un Junior debe ver:**
+
 - `createTodo` es una **factory function**. Recibe datos crudos y devuelve una entidad válida o lanza una excepción de dominio.
 - Las fechas son `string` (ISO 8601), no `Date`. Esto evita problemas de serialización entre servidor y cliente en React.
 - El `id` lo recibe la función; **el dominio no genera identificadores**. Eso es responsabilidad de capas externas.
 
 > #### ✅ Checkpoint 4.1 — Validar el dominio sin nada más
+>
 > En este punto no necesitamos ni UI, ni base de datos, ni Next, ni nada. El archivo se puede probar en aislamiento total:
 >
 > ```ts
@@ -240,6 +247,7 @@ export function createTodo(input: Todo): Todo {
 **Capa hexagonal:** Puerto (Port) de Dominio.
 
 **Reglas SOLID aplicadas:**
+
 - **DIP:** los casos de uso dependerán de esta interfaz, no de Prisma. La dirección de dependencia queda invertida (la infraestructura depende del dominio, no al revés).
 - **ISP:** expone solo cinco métodos atómicos. No tiene métodos "rellenos" ni opcionales.
 - **LSP:** cualquier implementación válida (Prisma, in-memory, Mongo, mock) puede sustituir a otra sin romper la aplicación.
@@ -262,11 +270,13 @@ export interface TodoRepository {
 ```
 
 **Detalles clave:**
+
 - `Todo["id"]` extrae el tipo del id desde la entidad. Si mañana cambias `id` a `number`, todas las firmas se ajustan automáticamente.
 - Todos los métodos son `Promise<...>` porque la persistencia real será asíncrona. Esto es una **concesión necesaria** al mundo real (en estricta teoría hexagonal, podrías esconder el async, pero en TypeScript moderno el costo no compensa).
 - No hay `try/catch` aquí. La interfaz no decide cómo se manejan errores: cada implementación lanza lo que tenga sentido.
 
 > #### ✅ Checkpoint 4.2 — Verificar que la interfaz compila
+>
 > Una interfaz no tiene comportamiento ejecutable. La validación es estática:
 >
 > ```bash
@@ -288,7 +298,9 @@ El patrón es muy uniforme:
 ```typescript
 export class NombreDelCasoDeUso {
   constructor(private readonly todoRepository: TodoRepository) {}
-  async execute(/* input */): Promise<Resultado> { /* ... */ }
+  async execute(/* input */): Promise<Resultado> {
+    /* ... */
+  }
 }
 ```
 
@@ -388,7 +400,7 @@ export class UpdateTodo {
 
 **Detalle clave 2:** Se verifica existencia primero (`findById`) y se vuelve a validar la entidad completa con `createTodo`. Es la **trinidad defensiva**: existe → válido → persiste.
 
-> **Nota del Senior:** este caso de uso *sí* genera `updatedAt: new Date().toISOString()` dentro del propio caso de uso. Es un caso límite: el reloj es un detalle del mundo. Idealmente se inyectaría como dependencia (`clock: () => string`). En esta aplicación se acepta esta simplificación porque el costo de inyectarlo no compensa al tamaño actual. Cuando crezca, vale la pena refactorizarlo.
+> **Nota del Senior:** este caso de uso _sí_ genera `updatedAt: new Date().toISOString()` dentro del propio caso de uso. Es un caso límite: el reloj es un detalle del mundo. Idealmente se inyectaría como dependencia (`clock: () => string`). En esta aplicación se acepta esta simplificación porque el costo de inyectarlo no compensa al tamaño actual. Cuando crezca, vale la pena refactorizarlo.
 
 ### 5.5 `DeleteTodo.ts`
 
@@ -439,6 +451,7 @@ export class ToggleTodoCompletion {
 **Detalle clave:** la operación es "leer → modificar en memoria → escribir". Es lo más cercano a una transacción atómica que tenemos a este nivel.
 
 > #### ✅ Checkpoint 5 — Probar TODA la capa de aplicación sin base de datos
+>
 > Esta es la prueba más importante de Clean Architecture. Vas a verificar que los casos de uso funcionan **sin tocar Prisma ni Postgres**. Lo logras inyectando un **mock repository** en memoria.
 >
 > Crea un archivo temporal `scratch-app.ts` y pega esto:
@@ -531,6 +544,7 @@ model Todo {
 ```
 
 **Detalles clave:**
+
 - `output = "../src/shared/generated/prisma"` ⇒ el cliente generado vive **dentro del repositorio**, no en `node_modules/@prisma/client`. Esto es intencional y se importa como `@/shared/generated/prisma/client`.
 - El modelo `Todo` usa `DateTime` (tipo Prisma) mientras que la entidad de dominio usa `string`. Esa **traducción** es responsabilidad del adapter (lo verás en 6.3).
 - `@id @default(cuid())` permite a Prisma generar el id si no lo provees. Aunque la app actual lo genera externamente (en el composition root), tener el default es defensivo.
@@ -605,6 +619,7 @@ if (process.env.NODE_ENV !== "production") {
 **Capa hexagonal:** Adapter (Infraestructura).
 
 **Reglas SOLID aplicadas:**
+
 - **LSP:** este adapter es 100% intercambiable con cualquier otro `TodoRepository`.
 - **DIP cumplido:** la dirección de la flecha de dependencia está invertida — el dominio define la interfaz; la infraestructura la implementa.
 
@@ -684,6 +699,7 @@ const toDomain = (row: TodoRow): Todo => ({
 ```
 
 Y al insertar/actualizar, el adapter convierte de vuelta:
+
 ```typescript
 createdAt: new Date(todo.createdAt), // string ISO → Date
 ```
@@ -757,10 +773,12 @@ export async function POST(req: Request) {
 ```
 
 **Lo que estás viendo:**
+
 - **El mismo patrón** que las Server Actions: instanciar el caso de uso con la implementación concreta del repositorio.
 - Doctrina hexagonal demostrada: ni el caso de uso ni el dominio cambiaron por exponer HTTP. Solo se agregó otro **adapter de entrada** (driving adapter).
 
 **Reglas SOLID aplicadas:**
+
 - **SRP:** cada función HTTP responde a un único verbo + recurso.
 - **DIP:** la elección concreta (`TodoPrismaRepository`) vive solo aquí, no escapa al dominio.
 
@@ -812,8 +830,9 @@ export async function POST(req: Request) {
 **Capa hexagonal:** Composition Root (driving adapter para la UI Next.js).
 
 **Reglas SOLID aplicadas:**
+
 - **SRP:** cada `xxxAction` exportada hace una sola cosa.
-- **DIP:** "se rompe" intencionalmente la inversión — aquí *sí* sabemos quién es `TodoPrismaRepository`, porque alguien tiene que decidirlo. Pero esa decisión está **aislada en este archivo**.
+- **DIP:** "se rompe" intencionalmente la inversión — aquí _sí_ sabemos quién es `TodoPrismaRepository`, porque alguien tiene que decidirlo. Pero esa decisión está **aislada en este archivo**.
 
 **Código actual:**
 
@@ -828,7 +847,7 @@ import { TodoPrismaRepository } from "../infrastructure/repositories/TodoPrismaR
 
 export async function addTodoAction(
   title: string,
-  description: string
+  description: string,
 ): Promise<void> {
   const trimmedTitle = title.trim();
   if (!trimmedTitle) return;
@@ -877,10 +896,15 @@ export async function toggleTodoAction(id: string): Promise<void> {
 >
 > export default function TestActionsPage() {
 >   return (
->     <form action={async () => {
->       "use server";
->       await addTodoAction("Probando Server Action", "Sin ningún client component");
->     }}>
+>     <form
+>       action={async () => {
+>         "use server";
+>         await addTodoAction(
+>           "Probando Server Action",
+>           "Sin ningún client component",
+>         );
+>       }}
+>     >
 >       <button type="submit">Crear todo de prueba</button>
 >     </form>
 >   );
@@ -902,6 +926,7 @@ Los componentes deben ser **agnósticos** de qué Server Action concreta los res
 **Responsabilidad:** Capturar título y descripción del usuario y llamar a `onAdd`.
 
 **Reglas SOLID aplicadas:**
+
 - **SRP:** solo maneja el formulario, su estado y la transición pending.
 - **DIP (en versión UI):** depende de la **prop `onAdd`** (abstracción), no de la Server Action concreta.
 
@@ -967,6 +992,7 @@ export default TodoInput;
 ```
 
 **Detalles clave:**
+
 - **`"use client"`** porque usa estado local y eventos del DOM.
 - **`useTransition()`** marca el envío como una transición no urgente y expone `isPending`, evitando que tengas que manejar `loading` a mano.
 - **El componente NO importa `addTodoAction`.** Eso lo hace la página y le pasa la función como prop. Esto es lo que mantiene al componente reutilizable y testeable.
@@ -1039,6 +1065,7 @@ export default TodoItem;
 ```
 
 **Detalles clave:**
+
 - **Importa el tipo `Todo` desde el dominio.** Esto te da type safety end-to-end: si mañana agregas un campo a la entidad, TypeScript te avisa en este componente.
 - `onToggle` es opcional. Útil para escenarios de solo-lectura (ej. un dashboard que muestra todos pero no permite cambiarlos).
 - Usa `<label>` envolvente para que clickear cualquier parte (texto, checkbox) marque/desmarque — buena práctica de accesibilidad.
@@ -1098,6 +1125,7 @@ export default TodoItem;
 ### 10.1 `src/app/todos/page.tsx`
 
 **Responsabilidad:**
+
 1. Ejecutar `GetTodos` para obtener los datos.
 2. Renderizar la estructura visual.
 3. Pasar las Server Actions como props a los Client Components.
@@ -1105,6 +1133,7 @@ export default TodoItem;
 **Capa hexagonal:** Presentación (Server Component) + Composition Root secundario (también ensambla `GetTodos`).
 
 **Reglas SOLID aplicadas:**
+
 - **SRP:** Lee → calcula stats → renderiza. Si crece más, divide en sub-componentes.
 - **DIP:** Sigue dependiendo de los casos de uso, no de Prisma directamente.
 
@@ -1201,11 +1230,13 @@ Cada uno con un ejemplo malo y su versión buena.
 ### 11.1 Poner lógica de negocio en componentes
 
 ❌ **Mal:**
+
 ```tsx
 const TodoInput = ({ onAdd }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (title.length < 8) {           // ← validación de dominio en UI
+    if (title.length < 8) {
+      // ← validación de dominio en UI
       alert("Title too short");
       return;
     }
@@ -1220,6 +1251,7 @@ const TodoInput = ({ onAdd }) => {
 ### 11.2 Acoplar un caso de uso a Prisma
 
 ❌ **Mal:**
+
 ```typescript
 // AddTodo.ts
 import { prisma } from "@/shared/infrastructure/database/prisma/prisma.client";
@@ -1250,6 +1282,7 @@ export class AddTodo {
 ### 11.5 Páginas con demasiadas responsabilidades
 
 ❌ **Mal:**
+
 ```tsx
 const TodosPage = async () => {
   const todos = await prisma.todo.findMany({ ... });   // ← persistencia en página
@@ -1265,6 +1298,7 @@ const TodosPage = async () => {
 ### 11.6 Importar el cliente Prisma en componentes cliente
 
 ❌ **Mal:**
+
 ```tsx
 "use client";
 import { prisma } from "@/shared/infrastructure/database/prisma/prisma.client";
@@ -1276,6 +1310,7 @@ import { prisma } from "@/shared/infrastructure/database/prisma/prisma.client";
 ### 11.7 Generar IDs o leer el reloj dentro del dominio
 
 ❌ **Mal:**
+
 ```typescript
 // AddTodo.ts
 async execute(input: { title: string; description: string }) {
@@ -1293,15 +1328,15 @@ async execute(input: { title: string; description: string }) {
 
 ## 12. Cuándo usar mocks y cuándo conectar a la DB real
 
-| Situación | Recomendación |
-|-----------|---------------|
-| Test unitario de un caso de uso | **Mock repo** en memoria |
-| Probar reglas de dominio (`createTodo`) | Sin repositorio, llamada directa a la función pura |
-| Test de integración del adapter (`TodoPrismaRepository`) | **DB real** (idealmente test DB aislada) |
-| Desarrollo cuando Postgres aún no está listo | Mock repo temporal — implementa `TodoRepository` con un `Todo[]` en memoria |
-| Smoke test end-to-end | DB real, ejecutar `pnpm prisma db push` antes |
-| CI/CD | DB temporal en Docker (Postgres) o adapter de prueba |
-| Producción | DB real, naturalmente |
+| Situación                                                | Recomendación                                                               |
+| -------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Test unitario de un caso de uso                          | **Mock repo** en memoria                                                    |
+| Probar reglas de dominio (`createTodo`)                  | Sin repositorio, llamada directa a la función pura                          |
+| Test de integración del adapter (`TodoPrismaRepository`) | **DB real** (idealmente test DB aislada)                                    |
+| Desarrollo cuando Postgres aún no está listo             | Mock repo temporal — implementa `TodoRepository` con un `Todo[]` en memoria |
+| Smoke test end-to-end                                    | DB real, ejecutar `pnpm prisma db push` antes                               |
+| CI/CD                                                    | DB temporal en Docker (Postgres) o adapter de prueba                        |
+| Producción                                               | DB real, naturalmente                                                       |
 
 **Regla práctica:** mientras más lejos estás del dominio (más en la capa exterior), más necesitas DB real. El dominio puro nunca la necesita.
 
@@ -1316,6 +1351,7 @@ async execute(input: { title: string; description: string }) {
 2. **Comentario obsoleto en `Todo.ts`.** Las propiedades `createdAt`/`updatedAt` tienen el comentario "Almacenar como cadena ISO para serialización de Redux", pero Redux no se usa en este proyecto. La razón real (serialización Server → Client en RSC, evitar `Date` en JSON) merece un comentario más preciso, o ningún comentario si el código habla solo.
 
 3. **`api/todos/route.ts` no valida el body.** Si se decide exponer este endpoint públicamente, añadir validación con [`zod`](https://zod.dev/):
+
    ```ts
    const TodoSchema = z.object({
      id: z.string(),
@@ -1409,13 +1445,13 @@ async execute(input: { title: string; description: string }) {
 
 ### Tiempos típicos en local
 
-| Tramo | Duración aprox. |
-|-------|-----------------|
-| Cliente → servidor (RPC) | 5-15ms |
-| Validación + Prisma INSERT | 20-80ms |
-| `revalidatePath` + re-render | 30-100ms |
-| Cliente → render final | 10-30ms |
-| **Total percibido** | **~80-300ms** |
+| Tramo                        | Duración aprox. |
+| ---------------------------- | --------------- |
+| Cliente → servidor (RPC)     | 5-15ms          |
+| Validación + Prisma INSERT   | 20-80ms         |
+| `revalidatePath` + re-render | 30-100ms        |
+| Cliente → render final       | 10-30ms         |
+| **Total percibido**          | **~80-300ms**   |
 
 ---
 

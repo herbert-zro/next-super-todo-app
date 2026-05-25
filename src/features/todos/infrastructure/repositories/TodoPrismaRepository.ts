@@ -1,57 +1,60 @@
 import { prisma } from "@/shared/infrastructure/database/prisma/prisma.client";
-import { Todo } from "../../domain/entities/Todo";
-import { TodoRepository } from "../../domain/repositories/TodoRepository";
 
-type TodoRow = {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import type { TodoRepository } from "../../domain/repositories/TodoRepository";
+import { toDomain, toPersistence } from "../mappers/todoMapper";
 
-const toDomain = (row: TodoRow): Todo => ({
-  id: row.id,
-  title: row.title,
-  description: row.description,
-  completed: row.completed,
-  createdAt: row.createdAt.toISOString(),
-  updatedAt: row.updatedAt.toISOString(),
-});
+type TodoPrismaDatabase = Pick<typeof prisma, "todo">;
 
-export const TodoPrismaRepository: TodoRepository = {
+export const createTodoPrismaRepository = (
+  db: TodoPrismaDatabase,
+): TodoRepository => ({
   getTodos: async () => {
-    const rows = await prisma.todo.findMany({ orderBy: { createdAt: "asc" } });
+    const rows = await db.todo.findMany({
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
     return rows.map(toDomain);
   },
 
   findById: async (id) => {
-    const row = await prisma.todo.findUnique({ where: { id } });
+    const row = await db.todo.findUnique({
+      where: {
+        id,
+      },
+    });
+
     return row ? toDomain(row) : null;
   },
 
   addTodo: async (todo) => {
-    await prisma.todo.create({
-      data: {
-        id: todo.id,
-        title: todo.title,
-        description: todo.description,
-        completed: todo.completed,
-        createdAt: new Date(todo.createdAt),
-        updatedAt: new Date(todo.updatedAt),
-      },
+    await db.todo.create({
+      data: toPersistence(todo),
     });
   },
 
   updateTodo: async ({ id, title, description, completed }) => {
-    await prisma.todo.update({
-      where: { id },
-      data: { title, description, completed },
+    await db.todo.updateMany({
+      where: {
+        id,
+      },
+      data: {
+        title,
+        description,
+        completed,
+        updatedAt: new Date(),
+      },
     });
   },
 
   deleteTodo: async (id) => {
-    await prisma.todo.delete({ where: { id } });
+    await db.todo.deleteMany({
+      where: {
+        id,
+      },
+    });
   },
-};
+});
+
+export const TodoPrismaRepository = createTodoPrismaRepository(prisma);
