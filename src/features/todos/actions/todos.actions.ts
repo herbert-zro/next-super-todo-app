@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
+import { auth } from "@/auth";
 import { AddTodo } from "../application/use-cases/AddTodo";
 import { ToggleTodoCompletion } from "../application/use-cases/ToggleTodoCompletion";
 import { TodoPrismaRepository } from "../infrastructure/repositories/TodoPrismaRepository";
@@ -17,10 +19,19 @@ export type AddTodoResult =
       errors: Partial<Record<keyof TodoFormValues | "form", string>>;
     };
 
+async function requireUserId(): Promise<string> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+  return session.user.id;
+}
+
 export async function addTodoAction(
   title: string,
   description: string,
 ): Promise<AddTodoResult> {
+  const userId = await requireUserId();
   const now = new Date().toISOString();
   try {
     await new AddTodo(TodoPrismaRepository).execute({
@@ -28,6 +39,7 @@ export async function addTodoAction(
       title,
       description,
       completed: false,
+      userId,
       createdAt: now,
       updatedAt: now,
     });
@@ -46,6 +58,7 @@ export async function addTodoAction(
 }
 
 export async function toggleTodoAction(id: string): Promise<void> {
-  await new ToggleTodoCompletion(TodoPrismaRepository).execute(id);
+  const userId = await requireUserId();
+  await new ToggleTodoCompletion(TodoPrismaRepository).execute(id, userId);
   revalidatePath("/todos");
 }

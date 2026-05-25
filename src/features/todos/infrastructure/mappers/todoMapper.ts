@@ -9,6 +9,7 @@ export const toDomain = (row: TodoRow): Todo => ({
   title: row.title,
   description: row.description,
   completed: row.completed,
+  userId: row.userId ?? "",
   createdAt: row.createdAt.toISOString(),
   updatedAt: row.updatedAt.toISOString(),
 });
@@ -18,6 +19,7 @@ export const toPersistence = (todo: Todo) => ({
   title: todo.title,
   description: todo.description,
   completed: todo.completed,
+  userId: todo.userId,
   createdAt: new Date(todo.createdAt),
   updatedAt: new Date(todo.updatedAt),
 });

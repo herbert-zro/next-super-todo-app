@@ -9,4 +9,6 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Todo'
+export type * from './models/User'
+export type * from './models/Credentials'
 export type * from './commonInputTypes'

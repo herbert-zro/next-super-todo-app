@@ -4,8 +4,11 @@ import { TodoRepository } from "../../domain/repositories/TodoRepository";
 export class ToggleTodoCompletion {
   constructor(private readonly todoRepository: TodoRepository) {}
 
-  async execute(id: Todo["id"]): Promise<void> {
-    const existing = await this.todoRepository.findById(id);
+  async execute(
+    id: Todo["id"],
+    userId: Todo["userId"],
+  ): Promise<void> {
+    const existing = await this.todoRepository.findById(id, userId);
     if (!existing) {
       throw new Error(`Todo with id ${id} not found`);
     }

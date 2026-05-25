@@ -8,21 +8,18 @@ type TodoPrismaDatabase = Pick<typeof prisma, "todo">;
 export const createTodoPrismaRepository = (
   db: TodoPrismaDatabase,
 ): TodoRepository => ({
-  getTodos: async () => {
+  getTodos: async (userId) => {
     const rows = await db.todo.findMany({
-      orderBy: {
-        createdAt: "asc",
-      },
+      where: { userId },
+      orderBy: { createdAt: "asc" },
     });
 
     return rows.map(toDomain);
   },
 
-  findById: async (id) => {
-    const row = await db.todo.findUnique({
-      where: {
-        id,
-      },
+  findById: async (id, userId) => {
+    const row = await db.todo.findFirst({
+      where: { id, userId },
     });
 
     return row ? toDomain(row) : null;
@@ -34,11 +31,9 @@ export const createTodoPrismaRepository = (
     });
   },
 
-  updateTodo: async ({ id, title, description, completed }) => {
+  updateTodo: async ({ id, userId, title, description, completed }) => {
     await db.todo.updateMany({
-      where: {
-        id,
-      },
+      where: { id, userId },
       data: {
         title,
         description,
@@ -48,11 +43,9 @@ export const createTodoPrismaRepository = (
     });
   },
 
-  deleteTodo: async (id) => {
+  deleteTodo: async (id, userId) => {
     await db.todo.deleteMany({
-      where: {
-        id,
-      },
+      where: { id, userId },
     });
   },
 });

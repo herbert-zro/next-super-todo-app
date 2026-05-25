@@ -4,7 +4,7 @@ import { TodoRepository } from "../../domain/repositories/TodoRepository";
 export class GetTodos {
   constructor(private readonly todoRepository: TodoRepository) {}
 
-  execute(): Promise<Todo[]> {
-    return this.todoRepository.getTodos();
+  execute(userId: Todo["userId"]): Promise<Todo[]> {
+    return this.todoRepository.getTodos(userId);
   }
 }

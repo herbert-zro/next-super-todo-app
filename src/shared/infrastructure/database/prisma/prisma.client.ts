@@ -25,7 +25,17 @@ const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClientSingleton;
 };
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+const EXPECTED_MODELS = ["todo", "user", "credentials"] as const;
+
+const isFresh = (client: PrismaClientSingleton | undefined) =>
+  !!client &&
+  EXPECTED_MODELS.every(
+    (m) => (client as unknown as Record<string, unknown>)[m] !== undefined,
+  );
+
+export const prisma = isFresh(globalForPrisma.prisma)
+  ? (globalForPrisma.prisma as PrismaClientSingleton)
+  : createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;

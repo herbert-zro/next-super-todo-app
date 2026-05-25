@@ -7,8 +7,11 @@ type UpdateTodoInput = Pick<Todo, "id" | "title" | "description">;
 export class UpdateTodo {
   constructor(private readonly todoRepository: TodoRepository) {}
 
-  async execute(input: UpdateTodoInput): Promise<void> {
-    const existing = await this.todoRepository.findById(input.id);
+  async execute(
+    input: UpdateTodoInput,
+    userId: Todo["userId"],
+  ): Promise<void> {
+    const existing = await this.todoRepository.findById(input.id, userId);
     if (!existing) {
       throw new Error(`Todo with id ${input.id} not found`);
     }
