@@ -1,4 +1,5 @@
 import { Todo } from "../../domain/entities/Todo";
+import { TodoNotFoundError } from "../../domain/errors/TodoNotFoundError";
 import { TodoRepository } from "../../domain/repositories/TodoRepository";
 import { createTodo } from "../validation/createTodo";
 
@@ -13,13 +14,13 @@ export class UpdateTodo {
   ): Promise<void> {
     const existing = await this.todoRepository.findById(input.id, userId);
     if (!existing) {
-      throw new Error(`Todo with id ${input.id} not found`);
+      throw new TodoNotFoundError(input.id);
     }
+    // `updatedAt` is owned by the database (@updatedAt), so we don't set it here.
     const updated = createTodo({
       ...existing,
       title: input.title,
       description: input.description,
-      updatedAt: new Date().toISOString(),
     });
     await this.todoRepository.updateTodo(updated);
   }

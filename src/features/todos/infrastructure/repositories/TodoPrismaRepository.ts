@@ -34,11 +34,13 @@ export const createTodoPrismaRepository = (
   updateTodo: async ({ id, userId, title, description, completed }) => {
     await db.todo.updateMany({
       where: { id, userId },
+      // `updatedAt` is intentionally omitted: the schema's `@updatedAt`
+      // attribute makes Prisma stamp it on every update. The DB is the single
+      // source of truth for this timestamp.
       data: {
         title,
         description,
         completed,
-        updatedAt: new Date(),
       },
     });
   },

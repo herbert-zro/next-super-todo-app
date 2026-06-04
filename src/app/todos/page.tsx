@@ -6,6 +6,7 @@ import { TodoPrismaRepository } from "@/features/todos/infrastructure/repositori
 import {
   addTodoAction,
   toggleTodoAction,
+  deleteTodoAction,
 } from "@/features/todos/actions/todos.actions";
 import { logoutAction } from "@/features/users/actions/auth.actions";
 import TodoInput from "@/features/todos/components/TodoInput";
@@ -52,7 +53,11 @@ const TodosPage = async () => {
           ) : (
             todos.map((todo) => (
               <li key={todo.id}>
-                <TodoItem todo={todo} onToggle={toggleTodoAction} />
+                <TodoItem
+                  todo={todo}
+                  onToggle={toggleTodoAction}
+                  onDelete={deleteTodoAction}
+                />
               </li>
             ))
           )}

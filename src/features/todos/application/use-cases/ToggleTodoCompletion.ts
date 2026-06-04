@@ -1,4 +1,5 @@
 import { Todo } from "../../domain/entities/Todo";
+import { TodoNotFoundError } from "../../domain/errors/TodoNotFoundError";
 import { TodoRepository } from "../../domain/repositories/TodoRepository";
 
 export class ToggleTodoCompletion {
@@ -10,12 +11,12 @@ export class ToggleTodoCompletion {
   ): Promise<void> {
     const existing = await this.todoRepository.findById(id, userId);
     if (!existing) {
-      throw new Error(`Todo with id ${id} not found`);
+      throw new TodoNotFoundError(id);
     }
+    // `updatedAt` is owned by the database (@updatedAt), so we don't set it here.
     await this.todoRepository.updateTodo({
       ...existing,
       completed: !existing.completed,
-      updatedAt: new Date().toISOString(),
     });
   }
 }
